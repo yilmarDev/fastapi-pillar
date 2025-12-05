@@ -70,17 +70,67 @@ pytest -v
 pytest --cov=app
 ```
 
-## 🐳 Docker Setup
+## ⚙️ Environment Configuration
+
+Copy the example environment file and configure your settings:
 
 ```sh
-# Start the complete development environment:
-docker-compose up -d
+cp .env.example .env
+```
 
-# Build the backend image:
-docker build -t fastapi-clean .
+Edit `.env` with your specific configuration. The `.env.example` file includes:
 
-# Run locally
-docker run -p 8000:8000 fastapi-clean
+- Database URLs for Docker and local development
+- Environment variables
+- Optional API keys and secrets
+
+## 🐳 Docker Setup
+
+This project uses **Docker Compose** to orchestrate the complete development environment with:
+
+- FastAPI application with hot-reload
+- PostgreSQL (main database)
+- PostgreSQL (test database)
+
+### Start Development Environment
+
+```sh
+# Start all services (app + databases)
+docker compose up
+
+# Or run in background
+docker compose up -d
+
+# View logs
+docker compose logs -f app
+
+# Stop all services
+docker compose down
+```
+
+### Features
+
+✅ **Hot-reload enabled** - Code changes are automatically detected  
+✅ **Persistent databases** - Data is preserved between restarts  
+✅ **Isolated test database** - Tests don't affect development data  
+✅ **Automatic user permissions** - Files created match your local user
+
+### Access the API
+
+- API: http://localhost:8000
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+- Main Database: `localhost:5432`
+- Test Database: `localhost:5433`
+
+### Rebuild After Changes
+
+```sh
+# Rebuild images after Dockerfile or requirements.txt changes
+docker compose up --build
+
+# Completely reset (removes volumes)
+docker compose down -v
 ```
 
 <!-- ## 📦 Project Structure
@@ -137,19 +187,52 @@ Planned CI/CD features:
   - Vercel serverless functions
   - AWS (Lambda or ECS)
 
-## ▶️ How to Run Locally
+## ▶️ How to Run Locally (Without Docker)
 
-Install dependencies:
+### Prerequisites
+
+You need **PostgreSQL** running locally. Choose one of these options:
+
+#### Option 1: Use Docker for databases only (Recommended)
 
 ```sh
+# Start only the databases
+docker compose up postgres_main postgres_test -d
+
+# Your app will connect to these databases on localhost:5432 and localhost:5433
+```
+
+#### Option 2: Install PostgreSQL locally
+
+```sh
+# macOS (using Homebrew)
+brew install postgresql@16
+brew services start postgresql@16
+
+# Create databases
+createdb fastapi_pillar
+createdb fastapi_pillar_test
+```
+
+### Run the Application
+
+```sh
+# Create virtual environment
+python3.14 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install dependencies
 pip install -r requirements.txt
 
+# Configure environment variables (create .env file)
+# DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fastapi_pillar
+# TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5433/fastapi_pillar_test
+
 # Start the API
-uvicorn app.main:app --reload
+fastapi dev app/main.py
 ```
 
-## API documentation:
+### API Documentation
 
 - Swagger UI → http://localhost:8000/docs
 - ReDoc → http://localhost:8000/redoc

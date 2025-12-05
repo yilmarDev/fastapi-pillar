@@ -28,18 +28,18 @@ def get_current_environment():
 
 
 @app.get(
-    "/greeting",
+    "/greeting/{name}",
     responses={
         200: {
             "description": "Current environment configuration",
             "content": {
                 "application/json": {
-                    "example": {"environment": "development", "status": "active"}
+                    "example": {"greet": "Hello Daniel", "status": "200"}
                 }
             },
         }
     },
 )
-def greet():
+def greet(name: str):
     settings = get_settings()
-    return {"greet": "Hellow Man", "status": "200"}
+    return {"greet": f"Hello {name}", "status": "200"}
