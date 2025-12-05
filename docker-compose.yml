@@ -1,0 +1,59 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_pillar_app
+    command: fastapi dev app/main.py --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres_main:5432/fastapi_pillar
+      TEST_DATABASE_URL: postgresql://postgres:postgres@postgres_test:5432/fastapi_pillar_test
+      ENV: development
+    depends_on:
+      - postgres_main
+      - postgres_test
+    networks:
+      - fastapi_pillar_network
+    volumes:
+      - ./app:/app/app:delegated
+      - ./requirements.txt:/app/requirements.txt:ro
+    user: "${UID:-501}:${GID:-20}"
+
+  postgres_main:
+    image: postgres:16
+    container_name: fastapi_pillar_postgres_main
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi_pillar
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_main_data:/var/lib/postgresql/data
+    networks:
+      - fastapi_pillar_network
+
+  postgres_test:
+    image: postgres:16
+    container_name: fastapi_pillar_postgres_test
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi_pillar_test
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    networks:
+      - fastapi_pillar_network
+
+networks:
+  fastapi_pillar_network:
+
+volumes:
+  postgres_main_data:
+  postgres_test_data:
