@@ -1,34 +1,34 @@
-from sqlmodel import SQLModel, create_engine, Session
+from sqlmodel import SQLModel
 from app.config.settings import get_settings
+from app.clients.postgres_client import PostgresClient
 
 settings = get_settings()
 
-
-def get_engine(test: bool = False):
-    database_url = settings.test_database_url if test else settings.database_url
-
-    # echo=Ture only for debug SQL, change to False in prod
-    engine = create_engine(
-        database_url,
-        echo=False,
-        pool_pre_ping=True,
-    )
-    return engine
-
-
-# App and test motors
-engine = get_engine(test=False)
-test_engine = get_engine(test=True)
+# PostgreSQL clients for app and tests
+postgres_client = PostgresClient(database_url=settings.database_url, echo=False)
+test_postgres_client = PostgresClient(
+    database_url=settings.test_database_url, echo=False
+)
 
 
 def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
+    """
+    Create all database tables using SQLModel metadata.
+    """
+    postgres_client.create_tables(SQLModel.metadata)
 
 
-def get_session():
+def get_postgres_client() -> PostgresClient:
     """
-    Dependency injection para FastAPI.
-    Crea una sesión nueva por request.
+    Dependency injection for FastAPI.
+    Returns the main PostgreSQL client instance.
     """
-    with Session(engine) as session:
-        yield session
+    return postgres_client
+
+
+def get_test_postgres_client() -> PostgresClient:
+    """
+    Dependency injection for tests.
+    Returns the test PostgreSQL client instance.
+    """
+    return test_postgres_client

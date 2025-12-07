@@ -2,16 +2,21 @@ from typing import Sequence
 from uuid import UUID
 
 from pydantic import EmailStr
-from sqlmodel import Session, select
-
+from sqlmodel import select
 
 from app.models.user import User
 from app.schemas.user import UserCreate
+from app.clients.postgres_client import PostgresClient
 
 
 class UserRepository:
-    def __init__(self, session: Session):
-        self.session = session
+    """
+    Repository for User data access operations.
+    Uses PostgresClient to abstract database connection details.
+    """
+
+    def __init__(self, client: PostgresClient):
+        self.client = client
 
     def create(self, user_create: UserCreate, hashed_password: str) -> User:
         user = User(
@@ -20,30 +25,78 @@ class UserRepository:
             hashed_password=hashed_password,
         )
 
-        self.session.add(user)
-        self.session.commit()
-        self.session.refresh(user)
-        return user
+        session_gen = self.client.get_session()
+        session = next(session_gen)
+        try:
+            session.add(user)
+            session.commit()
+            session.refresh(user)
+            return user
+        finally:
+            try:
+                next(session_gen)
+            except StopIteration:
+                pass
 
     def get_by_id(self, user_id: UUID) -> User | None:
-        return self.session.get(User, user_id)
+        session_gen = self.client.get_session()
+        session = next(session_gen)
+        try:
+            return session.get(User, user_id)
+        finally:
+            try:
+                next(session_gen)
+            except StopIteration:
+                pass
 
     def get_by_email(self, email: EmailStr) -> User | None:
-        statement = select(User).where(User.email == email)
-        return self.session.exec(statement).first()
+        session_gen = self.client.get_session()
+        session = next(session_gen)
+        try:
+            statement = select(User).where(User.email == email)
+            return session.exec(statement).first()
+        finally:
+            try:
+                next(session_gen)
+            except StopIteration:
+                pass
 
     def list(self, limit: int = 100, offset: int = 0) -> Sequence[User]:
-        statement = select(User).limit(limit).offset(offset)
-        return self.session.exec(statement).all()
+        session_gen = self.client.get_session()
+        session = next(session_gen)
+        try:
+            statement = select(User).limit(limit).offset(offset)
+            return session.exec(statement).all()
+        finally:
+            try:
+                next(session_gen)
+            except StopIteration:
+                pass
 
     def update(self, user: User, **kwargs) -> User:
-        for k, v in kwargs.items():
-            setattr(user, k, v)
-        self.session.add(user)
-        self.session.commit()
-        self.session.refresh(user)
-        return user
+        session_gen = self.client.get_session()
+        session = next(session_gen)
+        try:
+            for k, v in kwargs.items():
+                setattr(user, k, v)
+            session.add(user)
+            session.commit()
+            session.refresh(user)
+            return user
+        finally:
+            try:
+                next(session_gen)
+            except StopIteration:
+                pass
 
     def delete(self, user: User) -> None:
-        self.session.delete(user)
-        self.session.commit()
+        session_gen = self.client.get_session()
+        session = next(session_gen)
+        try:
+            session.delete(user)
+            session.commit()
+        finally:
+            try:
+                next(session_gen)
+            except StopIteration:
+                pass

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.config.settings import get_settings
-from app.controllers.users import router as users_router
+from app.routers.users import router as users_router
 
 app = FastAPI()
 
@@ -9,7 +9,7 @@ app.include_router(users_router)
 
 @app.get("/")
 def root():
-    return {"message": "FastAPI base challenge is running!"}
+    return {"message": "FastAPI Pillar is running!"}
 
 
 @app.get(

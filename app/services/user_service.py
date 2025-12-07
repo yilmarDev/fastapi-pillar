@@ -1,13 +1,17 @@
-from sqlmodel import Session
-
 from app.respositories.user_repository import UserRepository
 from app.schemas.user import UserCreate
 from app.core.security import get_hash_password
 
 
 class UserService:
-    def __init__(self, session: Session):
-        self.repo = UserRepository(session)
+    """
+    Service layer for user business logic.
+    Orchestrates operations between controllers and repositories.
+    Does not know about Client layer - receives Repository directly.
+    """
+
+    def __init__(self, repo: UserRepository):
+        self.repo = repo
 
     def register_user(self, user_create: UserCreate):
         existing = self.repo.get_by_email(user_create.email)
