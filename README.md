@@ -298,6 +298,59 @@ alembic history --verbose
 - Both development and test databases need migrations applied
 - In Docker, migrations run automatically on container start
 
+---
+
+## 🌱 Database Seeding
+
+The project includes a seeding system to populate your database with fake data for development and testing.
+
+### Features
+
+- Generates realistic fake users using **Faker** and **Factory Boy**
+- Safety check: prevents accidental seeding in production
+- Progress tracking and informative console output
+- Easily extensible for additional models
+
+### Running the Seed
+
+From the **project root directory**:
+
+```sh
+# Run the seed script (creates 10 users by default)
+python -m app.db.seed
+```
+
+### Customizing Seed Data
+
+You can modify `app/db/seed.py` to:
+
+- Change the number of users created
+- Add seeds for other models
+- Customize fake data generation
+
+Example programmatic usage:
+
+```python
+from app.db.seed import seed_users
+
+# Create 50 users
+seed_users(count=50)
+```
+
+### Seed Configuration
+
+The seed uses the factory configuration from `app/factories/`:
+
+- **Development**: Uses your main database
+- **Test environment**: Automatically uses test database
+- **Production**: Blocked by safety check
+
+Default credentials for seeded users:
+
+- Password: `password123` (hashed with bcrypt)
+
+---
+
 ## 📄 License
 
 This project is released under the MIT License.

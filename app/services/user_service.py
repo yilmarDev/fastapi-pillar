@@ -2,7 +2,7 @@ from sqlmodel import Session
 
 from app.respositories.user_repository import UserRepository
 from app.schemas.user import UserCreate
-from app.core.security import hash_password
+from app.core.security import get_hash_password
 
 
 class UserService:
@@ -14,7 +14,7 @@ class UserService:
         if existing:
             raise ValueError("Email already registered")
 
-        hashed = hash_password(user_create.password)
+        hashed = get_hash_password(user_create.password)
         user = self.repo.create(user_create=user_create, hashed_password=hashed)
         return user
 
