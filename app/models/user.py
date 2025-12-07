@@ -9,18 +9,20 @@ class UserBase(SQLModel):
     email: str = Field(
         sa_column=Column(String, nullable=False, unique=True, index=True)
     )
-    full_name: str | None = Field(default=None)
+    full_name: str | None = Field(default=None, sa_column=Column(String, nullable=True))
     is_active: bool = Field(default=True)
 
 
 class User(UserBase, table=True):
     id: UUID | None = Field(default_factory=uuid4, primary_key=True)
     hashed_password: str = Field(sa_column=Column(String, nullable=False))
-    create_at: datetime = Field(
-        default_factory=datetime.utcnow,
-        sa_column=Column(DateTime(timezone=True), server_default=func.now()),
+    create_at: datetime | None = Field(
+        default=None,
+        sa_column=Column(
+            DateTime(timezone=True), server_default=func.now(), nullable=False
+        ),
     )
     update_at: datetime | None = Field(
         default=None,
-        sa_column=Column(DateTime(timezone=True), onupdate=func.now()),
+        sa_column=Column(DateTime(timezone=True), onupdate=func.now(), nullable=True),
     )

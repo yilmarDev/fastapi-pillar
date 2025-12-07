@@ -228,6 +228,9 @@ pip install -r requirements.txt
 # DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fastapi_pillar
 # TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5433/fastapi_pillar_test
 
+# Run database migrations
+alembic upgrade head
+
 # Start the API
 fastapi dev app/main.py
 ```
@@ -236,6 +239,64 @@ fastapi dev app/main.py
 
 - Swagger UI → http://localhost:8000/docs
 - ReDoc → http://localhost:8000/redoc
+
+---
+
+## 🗃️ Database Migrations
+
+This project uses **Alembic** for database migrations.
+
+### Creating a New Migration
+
+When you modify models (add/remove fields, create new tables):
+
+```sh
+# Generate migration automatically (Alembic detects changes)
+alembic revision --autogenerate -m "Description of changes"
+
+# Example:
+alembic revision --autogenerate -m "Add phone field to User"
+```
+
+### Applying Migrations
+
+```sh
+# Apply all pending migrations
+alembic upgrade head
+
+# Apply one migration at a time
+alembic upgrade +1
+```
+
+### Rolling Back Migrations
+
+```sh
+# Rollback last migration
+alembic downgrade -1
+
+# Rollback to a specific version
+alembic downgrade <revision_id>
+```
+
+### Useful Alembic Commands
+
+```sh
+# Show current migration version
+alembic current
+
+# Show migration history
+alembic history
+
+# Show pending migrations
+alembic history --verbose
+```
+
+### Important Notes
+
+- **Always review** auto-generated migrations before applying them
+- The migration files are in `alembic/versions/`
+- Both development and test databases need migrations applied
+- In Docker, migrations run automatically on container start
 
 ## 📄 License
 
