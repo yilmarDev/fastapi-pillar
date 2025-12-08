@@ -1,9 +1,22 @@
+from contextlib import asynccontextmanager
 from typing import Dict
 from fastapi import FastAPI
 from app.config.settings import get_settings
 from app.routers.users import router as users_router
+from app.db.database import create_db_and_tables, postgres_client
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Handle startup and shutdown events."""
+    # Startup
+    create_db_and_tables()
+    yield
+    # Shutdown
+    postgres_client.close()
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.include_router(users_router)
 

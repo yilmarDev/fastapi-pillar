@@ -11,4 +11,4 @@ async def test_root_endpoint():
         response = await ac.get("/")
 
     assert response.status_code == 200
-    assert response.json() == {"message": "FastAPI base challenge is running!"}
+    assert response.json() == {"message": "FastAPI Pillar is running!"}
