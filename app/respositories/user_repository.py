@@ -19,84 +19,48 @@ class UserRepository:
         self.client = client
 
     def create(self, user_create: UserCreate, hashed_password: str) -> User:
+        """Create a new user with hashed password."""
         user = User(
             email=user_create.email,
             full_name=user_create.full_name,
             hashed_password=hashed_password,
         )
 
-        session_gen = self.client.get_session()
-        session = next(session_gen)
-        try:
+        with self.client.get_session_context() as session:
             session.add(user)
             session.commit()
             session.refresh(user)
             return user
-        finally:
-            try:
-                next(session_gen)
-            except StopIteration:
-                pass
 
     def get_by_id(self, user_id: UUID) -> User | None:
-        session_gen = self.client.get_session()
-        session = next(session_gen)
-        try:
+        """Retrieve user by ID."""
+        with self.client.get_session_context() as session:
             return session.get(User, user_id)
-        finally:
-            try:
-                next(session_gen)
-            except StopIteration:
-                pass
 
     def get_by_email(self, email: EmailStr) -> User | None:
-        session_gen = self.client.get_session()
-        session = next(session_gen)
-        try:
+        """Retrieve user by email address."""
+        with self.client.get_session_context() as session:
             statement = select(User).where(User.email == email)
             return session.exec(statement).first()
-        finally:
-            try:
-                next(session_gen)
-            except StopIteration:
-                pass
 
     def list(self, limit: int = 100, offset: int = 0) -> Sequence[User]:
-        session_gen = self.client.get_session()
-        session = next(session_gen)
-        try:
+        """List users with pagination."""
+        with self.client.get_session_context() as session:
             statement = select(User).limit(limit).offset(offset)
             return session.exec(statement).all()
-        finally:
-            try:
-                next(session_gen)
-            except StopIteration:
-                pass
 
     def update(self, user: User, **kwargs) -> User:
-        session_gen = self.client.get_session()
-        session = next(session_gen)
-        try:
+        """Update user with given attributes."""
+        with self.client.get_session_context() as session:
             for k, v in kwargs.items():
                 setattr(user, k, v)
             session.add(user)
             session.commit()
             session.refresh(user)
             return user
-        finally:
-            try:
-                next(session_gen)
-            except StopIteration:
-                pass
 
     def delete(self, user: User) -> None:
-        session_gen = self.client.get_session()
-        session = next(session_gen)
-        try:
+        """Delete a user."""
+        with self.client.get_session_context() as session:
             session.delete(user)
             session.commit()
-        finally:
-            try:
-                next(session_gen)
-            except StopIteration:
-                pass

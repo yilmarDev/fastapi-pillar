@@ -20,4 +20,4 @@ class UserRead(BaseModel):
 
 class userUpdate(BaseModel):
     full_name: str | None
-    is_active: str | None
+    is_active: bool | None

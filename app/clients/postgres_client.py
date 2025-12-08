@@ -1,5 +1,6 @@
 from sqlmodel import create_engine, Session
 from typing import Generator
+from contextlib import contextmanager
 
 
 class PostgresClient:
@@ -32,6 +33,26 @@ class PostgresClient:
         """
         with Session(self.engine) as session:
             yield session
+
+    @contextmanager
+    def get_session_context(self) -> Generator[Session, None, None]:
+        """
+        Context manager for database sessions.
+        Automatically handles session lifecycle and cleanup.
+
+        Usage:
+            with client.get_session_context() as session:
+                session.add(user)
+                session.commit()
+
+        Yields:
+            Session: SQLModel session for database operations
+        """
+        with Session(self.engine) as session:
+            try:
+                yield session
+            finally:
+                session.close()
 
     def create_tables(self, metadata) -> None:
         """

@@ -1,3 +1,4 @@
+from typing import Dict
 from fastapi import FastAPI
 from app.config.settings import get_settings
 from app.routers.users import router as users_router
@@ -8,7 +9,7 @@ app.include_router(users_router)
 
 
 @app.get("/")
-def root():
+def root() -> Dict[str, str]:
     return {"message": "FastAPI Pillar is running!"}
 
 
@@ -25,7 +26,7 @@ def root():
         }
     },
 )
-def get_current_environment():
+def get_current_environment() -> Dict[str, str]:
     settings = get_settings()
     return {"environment": settings.env, "status": "active"}
 
@@ -43,6 +44,6 @@ def get_current_environment():
         }
     },
 )
-def greet(name: str):
+def greet(name: str) -> Dict[str, str]:
     settings = get_settings()
     return {"greet": f"Hello {name}", "status": "200"}

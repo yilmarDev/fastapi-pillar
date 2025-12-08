@@ -11,7 +11,7 @@ test_postgres_client = PostgresClient(
 )
 
 
-def create_db_and_tables():
+def create_db_and_tables() -> None:
     """
     Create all database tables using SQLModel metadata.
     """
