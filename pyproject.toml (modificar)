@@ -1,0 +1,2 @@
+[tool.poetry.dependencies]
+coverage = "^6.0"

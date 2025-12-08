@@ -1,0 +1,22 @@
+[run]
+branch = True
+source = 
+    app
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+omit =
+    */venv/*
+    */__init__.py
+fail_under = 80
+
+[html]
+directory = coverage_html_report
+
+[xml]
+output = coverage.xml

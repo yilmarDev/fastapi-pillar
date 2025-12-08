@@ -60,15 +60,49 @@ async with AsyncClient(
     response = await ac.get("/")
 ```
 
-Run tests:
+### Running Tests
 
 ```shell
-# Local tests
+# Run all tests
 pytest -v
 
-# Run with coverage:
-pytest --cov=app
+# Run specific test file
+pytest tests/test_user_schemas.py -v
+
+# Run tests matching a pattern
+pytest -k "test_user" -v
 ```
+
+### Code Coverage
+
+This project uses **Coverage.py** to measure code quality:
+
+```shell
+# Run tests with coverage report
+coverage run -m pytest
+
+# Display coverage in terminal
+coverage report
+
+# Generate HTML coverage report
+coverage html
+
+# View HTML report
+open coverage_html_report/index.html
+```
+
+**Coverage Configuration** (`.coveragerc`):
+
+- Source: `app/` directory
+- Minimum threshold: **80%**
+- Branch coverage enabled
+- Excludes: `__init__.py` files and venv
+
+The coverage report shows:
+
+- Line coverage: % of lines executed
+- Branch coverage: % of conditional branches tested
+- Missing lines: which code wasn't tested
 
 ## ⚙️ Environment Configuration
 
