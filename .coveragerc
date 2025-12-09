@@ -2,6 +2,10 @@
 branch = True
 source = 
     app
+omit =
+    */venv/*
+    */__init__.py
+data_file = /tmp/.coverage
 
 [report]
 exclude_lines =
@@ -10,9 +14,6 @@ exclude_lines =
     raise AssertionError
     raise NotImplementedError
     if __name__ == .__main__.:
-omit =
-    */venv/*
-    */__init__.py
 fail_under = 80
 
 [html]

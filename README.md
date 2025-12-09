@@ -60,7 +60,7 @@ async with AsyncClient(
     response = await ac.get("/")
 ```
 
-### Running Tests
+### Running Tests Locally
 
 ```shell
 # Run all tests
@@ -71,13 +71,7 @@ pytest tests/test_user_schemas.py -v
 
 # Run tests matching a pattern
 pytest -k "test_user" -v
-```
 
-### Code Coverage
-
-This project uses **Coverage.py** to measure code quality:
-
-```shell
 # Run tests with coverage report
 coverage run -m pytest
 
@@ -91,18 +85,40 @@ coverage html
 open coverage_html_report/index.html
 ```
 
+### Running Tests in Docker
+
+```shell
+# Run all tests with coverage in Docker
+docker compose run test
+
+# Run tests and generate HTML coverage report
+docker compose run test coverage html
+```
+
+**Note:** The `test` service runs automatically with:
+
+- All tests executed (`pytest`)
+- Coverage measurement enabled
+- Minimum 80% coverage threshold enforced
+- HTML report generated in `coverage_html_report/`
+
+### Code Coverage
+
+This project uses **Coverage.py** to measure code quality:
+
 **Coverage Configuration** (`.coveragerc`):
 
 - Source: `app/` directory
 - Minimum threshold: **80%**
 - Branch coverage enabled
 - Excludes: `__init__.py` files and venv
+- Data file: `/tmp/.coverage` (persists in container temp)
 
 The coverage report shows:
 
-- Line coverage: % of lines executed
-- Branch coverage: % of conditional branches tested
-- Missing lines: which code wasn't tested
+- **Line coverage**: % of lines executed
+- **Branch coverage**: % of conditional branches tested
+- **Missing lines**: which code wasn't tested
 
 ## ⚙️ Environment Configuration
 

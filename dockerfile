@@ -24,6 +24,10 @@ RUN pip install --upgrade pip && \
 # Copy application code
 COPY ./app /app/app
 
+# Copy testing and configuration files
+COPY pytest.ini /app/
+COPY .coveragerc /app/
+COPY tests /app/tests
 
 # Stage 2: Runtime
 FROM python:3.14-slim
