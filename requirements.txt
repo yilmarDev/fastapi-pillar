@@ -7,6 +7,7 @@ black==25.11.0
 certifi==2025.11.12
 click==8.3.1
 coverage==7.13.0
+coveralls==4.1.1
 dnspython==2.8.0
 email-validator==2.3.0
 factory_boy==3.3.3

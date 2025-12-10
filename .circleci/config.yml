@@ -1,0 +1,92 @@
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@2.0.0
+
+jobs:
+  test:
+    docker:
+      - image: cimg/python:3.14
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7
+      - run:
+          name: Build Docker image
+          command: docker build -t fastapi_pillar:latest .
+      - run:
+          name: Run tests with coverage
+          command: |
+            docker compose up -d postgres_test
+            sleep 10
+            docker compose run --rm test coverage run -m pytest --verbose
+      - run:
+          name: Generate coverage XML for Coveralls
+          command: |
+            docker compose run --rm test coverage xml
+      - run:
+          name: Upload coverage to Coveralls
+          command: |
+            docker compose run --rm test pip install coveralls
+            docker compose run --rm test coveralls --service=circleci
+      - run:
+          name: Cleanup Docker containers
+          command: docker compose down
+          when: always
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: coverage_html_report
+          destination: coverage-report
+
+  lint:
+    docker:
+      - image: cimg/python:3.14
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install --upgrade pip
+            pip install -r requirements.txt
+      - run:
+          name: Run Black formatter check
+          command: |
+            . venv/bin/activate
+            black --check app tests
+      - run:
+          name: Run Flake8 linter
+          command: |
+            . venv/bin/activate
+            flake8 app tests --max-line-length=100 --exclude=venv,__pycache__
+
+  deploy-heroku:
+    docker:
+      - image: cimg/python:3.14
+    steps:
+      - checkout
+      - heroku/install
+      - run:
+          name: Deploy to Heroku
+          command: |
+            git remote add heroku https://git.heroku.com/$HEROKU_APP_NAME.git
+            git push -f heroku main
+      - run:
+          name: Run migrations on Heroku
+          command: heroku run "alembic upgrade head" -a $HEROKU_APP_NAME
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - test
+      - lint
+      - deploy-heroku:
+          requires:
+            - test
+            - lint
+          filters:
+            branches:
+              only: main
