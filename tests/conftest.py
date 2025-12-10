@@ -1,6 +1,5 @@
 import pytest
-from sqlalchemy import text
-from sqlmodel import SQLModel, Session
+from sqlmodel import SQLModel
 
 from app.db.database import test_postgres_client
 

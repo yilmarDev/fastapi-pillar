@@ -11,7 +11,7 @@ def seed_users(count: int = 10) -> None:
     Args:
         count: ammount of users to create (default: 10)
     """
-    print(f"Seeding users...")
+    print("Seeding users...")
     print(f"Env: {settings.env}")
     print(f"Generating {count} users...")
 

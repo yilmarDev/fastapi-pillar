@@ -3,7 +3,8 @@ from typing import Sequence
 
 from app.dependencies.user_dependencies import get_user_service
 from app.schemas.user import UserCreate, UserRead
-from app.models.user import User
+
+# from app.models.user import User
 from app.services.user_service import UserService
 
 
