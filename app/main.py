@@ -58,5 +58,5 @@ def get_current_environment() -> Dict[str, str]:
     },
 )
 def greet(name: str) -> Dict[str, str]:
-    settings = get_settings()
+    # settings = get_settings()
     return {"greet": f"Hello {name}", "status": "200"}

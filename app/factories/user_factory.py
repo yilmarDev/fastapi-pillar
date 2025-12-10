@@ -1,4 +1,3 @@
-import factory
 from factory.declarations import LazyAttribute, LazyFunction
 from faker import Faker
 from uuid import uuid4
