@@ -29,7 +29,7 @@ jobs:
             export PATH="$PATH:~/.local/bin"
             ~/.local/bin/docker-compose up -d postgres_test
             sleep 15
-            ~/.local/bin/docker-compose run --rm test coverage run -m pytest --verbose
+            ~/.local/bin/docker-compose run --rm test coverage run -m pytest --verbose --tb=short
           no_output_timeout: 5m
       - run:
           name: Generate coverage XML for Coveralls

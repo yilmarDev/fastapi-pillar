@@ -51,6 +51,24 @@ services:
     networks:
       - fastapi_pillar_network
 
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_pillar_test
+    command: pytest --verbose --tb=short
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres_main:5432/fastapi_pillar
+      TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres_test:5432/fastapi_pillar_test
+      ENV: test
+    depends_on:
+      - postgres_test
+    networks:
+      - fastapi_pillar_network
+    volumes:
+      - ./app:/app/app:delegated
+      - ./tests:/app/tests:delegated
+
 networks:
   fastapi_pillar_network:
 

@@ -21,8 +21,13 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --prefix=/install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy application code and necessary files
 COPY ./app /app/app
+COPY ./alembic /app/alembic
+COPY ./tests /app/tests
+COPY pytest.ini /app/
+COPY pyproject.toml /app/
+COPY alembic.ini /app/
 
 
 # Stage 2: Runtime
@@ -45,7 +50,7 @@ WORKDIR /app
 # Copy installed dependencies with correct permissions
 COPY --from=builder --chown=appuser:appuser /install /usr/local
 
-# Copy application code with correct permissions
+# Copy application code and all necessary files with correct permissions
 COPY --from=builder --chown=appuser:appuser /app /app
 
 # Switch to non-root user
