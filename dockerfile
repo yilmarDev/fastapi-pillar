@@ -29,6 +29,10 @@ COPY pytest.ini /app/
 COPY pyproject.toml /app/
 COPY alembic.ini /app/
 
+# Copy testing and configuration files
+COPY pytest.ini /app/
+COPY .coveragerc /app/
+COPY tests /app/tests
 
 # Stage 2: Runtime
 FROM python:3.14-slim
