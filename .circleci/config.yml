@@ -2,55 +2,44 @@ version: 2.1
 
 orbs:
   heroku: circleci/heroku@2.0.0
+  coveralls: coveralls/coveralls@2.2.5
 
 jobs:
-  # test:
-  #   docker:
-  #     - image: cimg/python:3.14
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker:
-  #         version: 20.10.7
-  #         docker_layer_caching: true
-  #     - run:
-  #         name: Install Docker Compose
-  #         command: |
-  #           curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
-  #           chmod +x ~/docker-compose
-  #           mkdir -p ~/.local/bin
-  #           mv ~/docker-compose ~/.local/bin/docker-compose
-  #           export PATH="$PATH:~/.local/bin"
-  #     - run:
-  #         name: Build Docker image
-  #         command: docker build -t fastapi_pillar:latest .
-  #     - run:
-  #         name: Run tests with coverage
-  #         command: |
-  #           export PATH="$PATH:~/.local/bin"
-  #           ~/.local/bin/docker-compose up -d postgres_test
-  #           sleep 15
-  #           ~/.local/bin/docker-compose run --rm test coverage run -m pytest --verbose
-  #         no_output_timeout: 5m
-  #     - run:
-  #         name: Generate coverage XML for Coveralls
-  #         command: |
-  #           export PATH="$PATH:~/.local/bin"
-  #           ~/.local/bin/docker-compose run --rm test coverage xml
-  #     - run:
-  #         name: Upload coverage to Coveralls
-  #         command: |
-  #           export PATH="$PATH:~/.local/bin"
-  #           ~/.local/bin/docker-compose run --rm test pip install coveralls
-  #           ~/.local/bin/docker-compose run --rm test coveralls --service=circleci
-  #     - run:
-  #         name: Cleanup Docker containers
-  #         command: |
-  #           export PATH="$PATH:~/.local/bin"
-  #           ~/.local/bin/docker-compose down
-  #         when: always
-  #     - store_artifacts:
-  #         path: coverage_html_report
-  #         destination: coverage-report
+  test:
+    docker:
+      - image: cimg/python:3.14
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
+            chmod +x ~/docker-compose
+            mkdir -p ~/.local/bin
+            mv ~/docker-compose ~/.local/bin/docker-compose
+            export PATH="$PATH:~/.local/bin"
+      - run:
+          name: Build Docker image
+          command: docker build -t fastapi_pillar:latest .
+      - run:
+          name: Run tests with coverage
+          command: |
+            export PATH="$PATH:~/.local/bin"
+            ~/.local/bin/docker-compose up -d postgres_test
+            sleep 15
+            ~/.local/bin/docker-compose run --rm test sh -c "coverage run -m pytest --verbose --tb=short && coverage xml && coverage html"
+          no_output_timeout: 5m
+      - run:
+          name: Cleanup Docker containers
+          command: |
+            export PATH="$PATH:~/.local/bin"
+            ~/.local/bin/docker-compose down
+          when: always
+      - store_artifacts:
+          path: coverage_html_report
+          destination: coverage-report
 
   lint:
     docker:
@@ -84,7 +73,8 @@ jobs:
       - run:
           name: Deploy to Heroku
           command: |
-            git remote add heroku https://git.heroku.com/$HEROKU_APP_NAME.git
+            git remote rm heroku || true
+            git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git
             git push -f heroku main
       - run:
           name: Run migrations on Heroku
