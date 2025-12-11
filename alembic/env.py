@@ -8,7 +8,7 @@ from logging.config import fileConfig
 from alembic import context
 
 from app.config.settings import get_settings
-from app.db.database import engine
+from app.db.database import postgres_client
 from sqlmodel import SQLModel
 from sqlalchemy import types
 
@@ -87,7 +87,7 @@ def run_migrations_online() -> None:
     # )
 
     # with connectable.connect() as connection:
-    with engine.connect() as connection:
+    with postgres_client.engine.connect() as connection:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
