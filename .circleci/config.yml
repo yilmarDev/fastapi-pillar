@@ -29,7 +29,7 @@ jobs:
             export PATH="$PATH:~/.local/bin"
             ~/.local/bin/docker-compose up -d postgres_test
             sleep 15
-            ~/.local/bin/docker-compose run --rm test sh -c "coverage run -m pytest --verbose --tb=short && coverage xml && coverage html"
+            ~/.local/bin/docker-compose run --rm test sh -c "coverage run -m pytest --verbose --tb=short && coverage report && coverage xml && coverage html"
           no_output_timeout: 5m
       - run:
           name: Cleanup Docker containers
