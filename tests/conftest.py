@@ -1,6 +1,9 @@
 import pytest
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
 from sqlmodel import SQLModel
 
+from app.routers.users import router
 from app.db.database import test_postgres_client
 
 
@@ -39,3 +42,20 @@ def test_client():
     Provide test postgres client instance for direct repository testing.
     """
     return test_postgres_client
+
+
+@pytest.fixture
+def app():
+    """
+    Provide a FastAPI app with routers for testing.
+    """
+    app = FastAPI()
+    app.include_router(router)
+    yield app
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def client(app):
+    """Provide a TestClient instance for API endpoint testing"""
+    return TestClient(app)
