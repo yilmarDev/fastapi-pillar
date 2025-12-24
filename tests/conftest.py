@@ -5,6 +5,18 @@ from sqlmodel import SQLModel
 
 from app.routers.users import router
 from app.db.database import test_postgres_client
+from app.dependencies.user_dependencies import get_db
+
+
+@pytest.fixture(scope="session", autouse=True)
+def print_test_db_info():
+    """
+    Print test database URL
+    """
+    print(f"\n\n{'='*70}")
+    print(f"Test url BD: ", test_postgres_client.engine.url)
+    print(f"\n{'='*70}")
+    yield
 
 
 @pytest.fixture(scope="session")
@@ -45,12 +57,19 @@ def test_client():
 
 
 @pytest.fixture
-def app():
+def app(db_session):
     """
     Provide a FastAPI app with routers for testing.
+    Override get_db dependency to use test session.
     """
     app = FastAPI()
     app.include_router(router)
+
+    # Override get_db to return the test session as a generator
+    def override_get_db():
+        yield db_session
+
+    app.dependency_overrides[get_db] = override_get_db
     yield app
     app.dependency_overrides.clear()
 

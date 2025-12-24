@@ -8,11 +8,9 @@ settings = get_settings()
 postgres_client = PostgresClient(database_url=settings.database_url, echo=False)
 
 # Only create test client if TEST_DATABASE_URL is configured
-test_postgres_client = None
-if settings.test_database_url:
-    test_postgres_client = PostgresClient(
-        database_url=settings.test_database_url, echo=False
-    )
+test_postgres_client = PostgresClient(
+    database_url=settings.test_database_url, echo=False
+)
 
 
 def create_db_and_tables() -> None:
