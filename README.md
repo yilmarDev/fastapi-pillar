@@ -25,7 +25,7 @@ The project follows an adapted **Clean Architecture** with clear separation of c
 
 ## 🧱 Technology Stack
 
-- **Python 3.14**
+- **Python 3.13**
 - **FastAPI**
 - **SQLModel**
 - **PostgreSQL**
@@ -36,7 +36,8 @@ The project follows an adapted **Clean Architecture** with clear separation of c
 - **CircleCI** (CI pipeline)
 - **Coverage + Coveralls**
 - **OAuth2 with Google** (optional module)
-- **Black & Ruff** (linting and formatting)
+- **uv** (dependency management)
+- **Black & Flake8** (linting and formatting)
 - **Dotenv** (environment configuration)
 
 ---
@@ -176,7 +177,7 @@ docker compose down
 ### Rebuild After Changes
 
 ```sh
-# Rebuild images after Dockerfile or requirements.txt changes
+# Rebuild images after Dockerfile or pyproject.toml changes
 docker compose up --build
 
 # Completely reset (removes volumes)
@@ -267,12 +268,11 @@ createdb fastapi_pillar_test
 ### Run the Application
 
 ```sh
-# Create virtual environment
-python3.14 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Install dependencies and create virtual environment
+uv sync
 
-# Install dependencies
-pip install -r requirements.txt
+# Activate virtual environment
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Configure environment variables (create .env file)
 # DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fastapi_pillar

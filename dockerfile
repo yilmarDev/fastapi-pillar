@@ -1,5 +1,5 @@
 # Stage 1: Builder
-FROM python:3.14-slim AS builder
+FROM python:3.13-slim AS builder
 
 # Environment variables to optimize build
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -15,27 +15,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Copy only requirements first (leverage Docker cache)
-COPY requirements.txt .
+COPY pyproject.toml .
 
 # Install dependencies in specific prefix
-RUN pip install --upgrade pip && \
-    pip install --prefix=/install --no-cache-dir -r requirements.txt
+RUN pip install uv && \
+    uv pip install --system --no-dev --target /install -r pyproject.toml
 
 # Copy application code and necessary files
 COPY ./app /app/app
 COPY ./alembic /app/alembic
 COPY ./tests /app/tests
+COPY .coveragerc /app/
 COPY pytest.ini /app/
 COPY pyproject.toml /app/
 COPY alembic.ini /app/
 
-# Copy testing and configuration files
-COPY pytest.ini /app/
-COPY .coveragerc /app/
-COPY tests /app/tests
-
 # Stage 2: Runtime
-FROM python:3.14-slim
+FROM python:3.13-slim
 
 # Runtime environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
