@@ -37,7 +37,7 @@ The project follows an adapted **Clean Architecture** with clear separation of c
 - **Coverage + Coveralls**
 - **OAuth2 with Google** (optional module)
 - **uv** (dependency management)
-- **Black & Flake8** (linting and formatting)
+- **Ruff** (linting and formatting)
 - **Dotenv** (environment configuration)
 
 ---

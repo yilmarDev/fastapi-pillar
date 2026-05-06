@@ -3,9 +3,9 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlmodel import SQLModel
 
-from app.routers.users import router
 from app.db.database import test_postgres_client
 from app.dependencies.user_dependencies import get_db
+from app.routers.users import router
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -13,9 +13,9 @@ def print_test_db_info():
     """
     Print test database URL
     """
-    print(f"\n\n{'='*70}")
-    print(f"Test url BD: ", test_postgres_client.engine.url)
-    print(f"\n{'='*70}")
+    print(f"\n\n{'=' * 70}")
+    print("Test url BD: ", test_postgres_client.engine.url)
+    print(f"\n{'=' * 70}")
     yield
 
 

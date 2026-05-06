@@ -1,8 +1,8 @@
 from factory.alchemy import SQLAlchemyModelFactory
 from sqlmodel import Session
-from app.db.database import postgres_client, test_postgres_client
-from app.config.settings import get_settings
 
+from app.config.settings import get_settings
+from app.db.database import postgres_client, test_postgres_client
 
 settings = get_settings()
 

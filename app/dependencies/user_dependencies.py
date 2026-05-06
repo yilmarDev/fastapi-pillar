@@ -7,12 +7,12 @@ with all their dependencies properly wired up.
 
 from typing import Generator
 
-from sqlmodel import Session
 from fastapi import Depends
+from sqlmodel import Session
 
 from app.db.database import postgres_client
-from app.services.user_service import UserService
 from app.respositories.user_repository import UserRepository
+from app.services.user_service import UserService
 
 
 def get_db() -> Generator[Session, None, None]:

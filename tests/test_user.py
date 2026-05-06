@@ -1,7 +1,7 @@
 import uuid
 
-from app.schemas.user import UserRead
 from app.dependencies.user_dependencies import get_user_service
+from app.schemas.user import UserRead
 
 
 class TestListUsers:

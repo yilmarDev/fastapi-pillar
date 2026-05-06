@@ -1,6 +1,7 @@
-from pydantic_settings import BaseSettings
-from pydantic import Field, ConfigDict, field_validator
 from functools import lru_cache
+
+from pydantic import ConfigDict, Field, field_validator
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):

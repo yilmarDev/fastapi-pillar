@@ -1,6 +1,7 @@
-from sqlmodel import create_engine, Session
-from typing import Generator
 from contextlib import contextmanager
+from typing import Generator
+
+from sqlmodel import Session, create_engine
 
 
 class PostgresClient:

@@ -1,18 +1,13 @@
-import sqlmodel.sql.sqltypes
-
 from logging.config import fileConfig
+
+import sqlmodel.sql.sqltypes
+from sqlmodel import SQLModel
 
 # from sqlalchemy import engine_from_config
 # from sqlalchemy import pool
-
 from alembic import context
-
 from app.config.settings import get_settings
 from app.db.database import postgres_client
-from sqlmodel import SQLModel
-from sqlalchemy import types
-
-from app.models.user import User
 
 settings = get_settings()
 

@@ -1,5 +1,5 @@
-from app.factories.user_factory import UserFactory
 from app.config.settings import get_settings
+from app.factories.user_factory import UserFactory
 
 settings = get_settings()
 

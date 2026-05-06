@@ -1,8 +1,8 @@
-from uuid import uuid4, UUID
 from datetime import datetime
+from uuid import UUID, uuid4
 
-from sqlmodel import SQLModel, Field, Column
-from sqlalchemy import String, DateTime, func
+from sqlalchemy import DateTime, String, func
+from sqlmodel import Column, Field, SQLModel
 
 
 class UserBase(SQLModel):

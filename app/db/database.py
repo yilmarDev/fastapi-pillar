@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel
-from app.config.settings import get_settings
+
 from app.clients.postgres_client import PostgresClient
+from app.config.settings import get_settings
 
 settings = get_settings()
 

@@ -1,9 +1,11 @@
-from factory.declarations import LazyAttribute, LazyFunction
-from faker import Faker
 from uuid import uuid4
 
-from app.models.user import User
+from factory.declarations import LazyAttribute, LazyFunction
+from faker import Faker
+
 from app.core.security import get_hash_password
+from app.models.user import User
+
 from .base import BaseFactory
 
 fake = Faker()
