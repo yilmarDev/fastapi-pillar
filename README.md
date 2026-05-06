@@ -171,7 +171,7 @@ docker compose down
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
 - Main Database: `localhost:5432`
-- Test Database: `localhost:5433`
+- Test Database: `localhost:5488`
 
 ### Rebuild After Changes
 
@@ -249,7 +249,7 @@ You need **PostgreSQL** running locally. Choose one of these options:
 # Start only the databases
 docker compose up postgres_main postgres_test -d
 
-# Your app will connect to these databases on localhost:5432 and localhost:5433
+# Your app will connect to these databases on localhost:5432 and localhost:5488
 ```
 
 #### Option 2: Install PostgreSQL locally
@@ -276,7 +276,7 @@ pip install -r requirements.txt
 
 # Configure environment variables (create .env file)
 # DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fastapi_pillar
-# TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5433/fastapi_pillar_test
+# TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5488/fastapi_pillar_test
 
 # Run database migrations
 alembic upgrade head
