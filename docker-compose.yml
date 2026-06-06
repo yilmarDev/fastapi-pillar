@@ -30,7 +30,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: fastapi_pillar
     ports:
-      - "5432:5432"
+      - "5488:5432"
     volumes:
       - postgres_main_data:/var/lib/postgresql/data
     networks:
@@ -45,7 +45,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: fastapi_pillar_test
     ports:
-      - "5488:5432"
+      - "5489:5432"
     volumes:
       - postgres_test_data:/var/lib/postgresql/data
     networks:
@@ -55,6 +55,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: test
     container_name: fastapi_pillar_test
     command: pytest --verbose --tb=short
     user: root
