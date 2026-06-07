@@ -1,11 +1,15 @@
 from functools import lru_cache
 
-from pydantic import ConfigDict, Field, field_validator
-from pydantic_settings import BaseSettings
+from pydantic import Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = ConfigDict(env_file=".env", extra="ignore")  # type: ignore[arg-type]
+    model_config = SettingsConfigDict(
+        env_file=(".env", ".env.docker", ".env.local"),
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
     env: str = Field(default="development", validation_alias="ENV")
     database_url: str = Field(default="", validation_alias="DATABASE_URL")
