@@ -1,5 +1,13 @@
 # FastAPI Clean Architecture Base Project
 
+[![Tests](https://github.com/yilmarDev/fastapi-pillar/workflows/lint%20and%20test/badge.svg)](https://github.com/yilmarDev/fastapi-pillar/actions)
+[![codecov](https://codecov.io/github/yilmarDev/fastapi-pillar/graph/badge.svg?token=7UV76FAKT4)](https://codecov.io/github/yilmarDev/fastapi-pillar)
+[![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.123-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192.svg?logo=postgresql)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED.svg?logo=docker)](https://www.docker.com/)
+[![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 A production-ready **FastAPI** backend boilerplate designed with clean architecture principles, modern best practices, and full support for testing, containerization, CI/CD, and scalable development.
 
 This project can be used as a starting point for real-world applications, technical assessments, microservices, or backend services consumed by frontend/mobile applications.
@@ -33,8 +41,8 @@ The project follows an adapted **Clean Architecture** with clear separation of c
 - **Pytest** (async support with `httpx` + `ASGITransport`)
 - **Faker** (for seeds)
 - **Alembic** (migrations)
-- **CircleCI** (CI pipeline)
-- **Coverage + Coveralls**
+- **GitHub Actions** (CI/CD pipeline)
+- **Coverage + Codecov**
 - **OAuth2 with Google** (optional module)
 - **uv** (dependency management)
 - **Ruff** (linting and formatting)
@@ -230,12 +238,13 @@ The project includes a pattern for interacting with external APIs:
 
 ## 🔄 CI/CD
 
-Planned CI/CD features:
+CI/CD features:
 
-- CircleCI pipeline for automated testing
-- Coverage reporting (Coveralls)
+- GitHub Actions pipeline for automated testing
+- Coverage reporting (Codecov)
+- Automated linting and formatting checks
 - Dockerized builds
-- Deployment workflows for:
+- Ready for deployment to:
   - Heroku
   - Vercel serverless functions
   - AWS (Lambda or ECS)
