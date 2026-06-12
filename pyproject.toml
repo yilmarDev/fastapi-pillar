@@ -17,6 +17,7 @@ dependencies = [
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
     "python-dotenv>=1.2.1",
+    "python-jose[cryptography]>=3.5.0",
     "python-multipart>=0.0.20",
     "sentry-sdk>=2.47.0",
     "sqlmodel>=0.0.27",
