@@ -2,7 +2,7 @@ from typing import Sequence
 
 from fastapi import HTTPException, status
 
-from app.core.security import get_hash_password
+from app.core.security import get_hash_password, verify_password
 from app.models.user import User
 from app.respositories.user_repository import UserRepository
 from app.schemas.user import UserCreate
@@ -31,3 +31,24 @@ class UserService:
 
     def list_users(self, limit: int = 100, offset: int = 0) -> Sequence[User]:
         return self.repo.list(limit=limit, offset=offset)
+
+    def authenticate_user(self, email: str, password: str) -> User | None:
+        """
+        Authenticate a user by email and password
+
+        Args:
+            email: User's email address
+            password: Plain text password to verify
+
+        Returns:
+            User object if credentials are valid, None otherwise
+        """
+
+        user = self.repo.get_by_email(email)
+        if not user:
+            return None
+
+        if not verify_password(password, user.hashed_password):
+            return None
+
+        return user

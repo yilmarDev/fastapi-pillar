@@ -14,6 +14,13 @@ class Settings(BaseSettings):
     env: str = Field(default="development", validation_alias="ENV")
     database_url: str = Field(default="", validation_alias="DATABASE_URL")
     test_database_url: str = Field(default="", validation_alias="TEST_DATABASE_URL")
+    secret_key: str = Field(
+        default="dev-secret-key-change-in-production", validation_alias="SECRET_KEY"
+    )
+    algorithm: str = Field(default="", validation_alias="ALGORITHM")
+    access_token_expire_minutes: int = Field(
+        default=30, validation_alias="ACCESS_TOKEN_EXPIRE_MINUTES"
+    )
 
     @field_validator("database_url", mode="after")
     @classmethod
