@@ -35,6 +35,9 @@ dev = [
     "pytest-mock>=3.15.1",
 ]
 
+[tool.setuptools]
+packages = ["app"]
+
 [tool.ruff]
 line-length = 88
 

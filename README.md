@@ -135,7 +135,9 @@ Edit `.env` with your specific configuration. The `.env.example` file includes:
 - Environment variables
 - Optional API keys and secrets
 
-## 🐳 Docker Setup
+## 🐳 Docker Setup (Recommended)
+
+> **⚠️ Recommended Approach:** This project is designed to run in Docker. Using Docker ensures consistency across environments and simplifies dependency management.
 
 This project uses **Docker Compose** to orchestrate the complete development environment with:
 
@@ -171,8 +173,8 @@ docker compose down
 - API: http://localhost:8000
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
-- Main Database: `localhost:5432`
-- Test Database: `localhost:5488`
+- Main Database: `localhost:5488`
+- Test Database: `localhost:5489`
 
 ### Rebuild After Changes
 
@@ -240,6 +242,8 @@ Planned CI/CD features:
 
 ## ▶️ How to Run Locally (Without Docker)
 
+> **Note:** Running with Docker (see above) is the recommended approach. This section is for advanced users who prefer local development.
+
 ### Prerequisites
 
 You need **PostgreSQL** running locally. Choose one of these options:
@@ -250,7 +254,9 @@ You need **PostgreSQL** running locally. Choose one of these options:
 # Start only the databases
 docker compose up postgres_main postgres_test -d
 
-# Your app will connect to these databases on localhost:5432 and localhost:5488
+# Your app will connect to these databases on:
+# - Main DB: localhost:5488
+# - Test DB: localhost:5489
 ```
 
 #### Option 2: Install PostgreSQL locally
@@ -275,8 +281,8 @@ uv sync
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Configure environment variables (create .env file)
-# DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fastapi_pillar
-# TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5488/fastapi_pillar_test
+# DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5488/fastapi_pillar
+# TEST_DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5489/fastapi_pillar_test
 
 # Run database migrations
 alembic upgrade head

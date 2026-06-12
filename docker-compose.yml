@@ -7,10 +7,11 @@ services:
     command: fastapi dev app/main.py --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      TEST_DATABASE_URL: ${TEST_DATABASE_URL}
-      ENV: ${ENV}
+    env_file: .env.docker
+    # environment:
+    #   DATABASE_URL: ${DATABASE_URL}
+    #   TEST_DATABASE_URL: ${TEST_DATABASE_URL}
+    #   ENV: ${ENV}
     depends_on:
       - postgres_main
       - postgres_test
@@ -30,7 +31,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: fastapi_pillar
     ports:
-      - "5432:5432"
+      - "5488:5432"
     volumes:
       - postgres_main_data:/var/lib/postgresql/data
     networks:
@@ -45,7 +46,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: fastapi_pillar_test
     ports:
-      - "5488:5432"
+      - "5489:5432"
     volumes:
       - postgres_test_data:/var/lib/postgresql/data
     networks:
@@ -55,12 +56,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: test
     container_name: fastapi_pillar_test
     command: pytest --verbose --tb=short
     user: root
+    env_file: .env.docker
     environment:
-      DATABASE_URL: ${DATABASE_URL}
-      TEST_DATABASE_URL: ${TEST_DATABASE_URL}
       ENV: test
     depends_on:
       - postgres_test
